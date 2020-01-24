@@ -3,11 +3,8 @@ import bodyParser from 'body-parser';
 import ApiRouter from './Routes/ApiRouter';
 import UserRouterHandler from './Routes/Handlers/UserRouterHandler';
 import AuthorizationRouter from './Routes/Authorization/AuthorizationRouter';
-import { EventTypes } from './Data/Events/EventType';
-import { EventNames } from './Data/Events/EventName';
-
-import Config from './Config/Config';
 import { FakeUserDataCreator } from './Data/Factory/Users/FakeUserDataCreator';
+import UserBdDataCreator from './Data/Factory/Users/UserBdDataCreator';
 
 const PORT = process.env.PORT || 6011;
 const app = express();
@@ -19,12 +16,13 @@ const RoutesPath = {
 
 
 const DataCreators = {
-    USERS: new FakeUserDataCreator()
+    USERS_FAKE: new FakeUserDataCreator(),
+    USERS_BD: new UserBdDataCreator()
 }
 
 const ApiRouters = {
     USERS: new ApiRouter(
-        new UserRouterHandler(DataCreators.USERS)
+        new UserRouterHandler(DataCreators.USERS_FAKE)
         )
     
 }

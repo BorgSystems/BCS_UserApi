@@ -19,5 +19,4 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
         throw new Error("Method not implemented.");
     }
 
-
 }
