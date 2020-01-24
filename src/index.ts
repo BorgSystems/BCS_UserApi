@@ -7,6 +7,7 @@ import { EventTypes } from './Data/Events/EventType';
 import { EventNames } from './Data/Events/EventName';
 
 import Config from './Config/Config';
+import { FakeUserDataCreator } from './Data/Factory/FakeUserDataCreator';
 
 const PORT = process.env.PORT || 6011;
 const app = express();
@@ -16,8 +17,16 @@ const RoutesPath = {
     LOGIN: '/auth'
 }
 
+
+const DataCreators = {
+    USERS: new FakeUserDataCreator()
+}
+
 const ApiRouters = {
-    USERS: new ApiRouter(new UserRouterHandler())
+    USERS: new ApiRouter(
+        new UserRouterHandler(DataCreators.USERS)
+        )
+    
 }
 
 const Routers = {

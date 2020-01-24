@@ -1,7 +1,6 @@
 import {EventTypes} from "../../Data/Events/EventType";
 import {ParamsDictionary} from "express-serve-static-core";
 import * as Express from 'express';
-import { FakeUserDataCreator } from '../../Data/Factory/FakeUserDataCreator';
 import { ResponseItem, StatusType, FailedReason } from '../ResponseData/ResponseData';
 import { User } from '../../Models/Users/User';
 import UserValuesBuilder from '../../Data/Builders/ValuesBuilder/UserValuesBuilder';
@@ -10,11 +9,19 @@ import ApiContainer from '../../Data/ApiContainer';
 import RouterHandlerBase from './Base/RouterHandlerBase';
 import ISafeRouterHandler from "./Base/ISafeRouterHandler";
 import { ISafePredictableDelegate } from "../RouterInterfaces";
+import { IDataProvider } from "../../Data/IDataProvider";
+import UserValues from "../../Models/Users/UserValues";
+import { IDataProviderCreator } from "../../Data/IDataProviderCreator";
 
-const dataProviderCreator = new FakeUserDataCreator();
-const dataProvider = dataProviderCreator.create();
 
 export default class UserRouterHandler extends RouterHandlerBase implements ISafeRouterHandler {
+
+    private _dataProvider: IDataProvider<User, UserValues>;
+    constructor(dataProviderCreator: IDataProviderCreator<User, UserValues>) {
+        super();
+        this._dataProvider = dataProviderCreator.create();
+    }
+
     isSafe(apiContainer: ApiContainer,predictableFunc: ISafePredictableDelegate): Promise<boolean> {
         return predictableFunc(apiContainer);
     }
@@ -39,7 +46,7 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
             }
             const firstName = body.firstName;
             const phoneNumber = body.phoneNumber;
-            const user = await dataProvider.create(new User(
+            const user = await this._dataProvider.create(new User(
                 new UserValuesBuilder()
                 .setFirstName(firstName)
                 .setPhoneNumber(phoneNumber)
@@ -70,7 +77,7 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
             const phoneNumber = body.phoneNumber;
 
             const userId = req.params.id;
-            const user = await dataProvider.update( 
+            const user = await this._dataProvider.update( 
                 new UserValuesBuilder()
                     .setFirstName(firstName)
                     .setPhoneNumber(phoneNumber)
@@ -97,7 +104,7 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
         this.getEventByType(EventTypes.ON_DELETE)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
             const userId = req.params.id;
-            const isUserDeleted = await dataProvider.delete(Number(userId));
+            const isUserDeleted = await this._dataProvider.delete(Number(userId));
             if(isUserDeleted) {
                 responseItem.Status = StatusType.SUCCESS;
                 responseItem.Data = {deleted: true};
@@ -117,7 +124,7 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
         this.getEventByType(EventTypes.ON_GET)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
             const userId = req.params.id;
-            const user = await dataProvider.read(Number(userId));
+            const user = await this._dataProvider.read(Number(userId));
             if(user) {
                 responseItem.Status = StatusType.SUCCESS;
                 responseItem.Data = user;
@@ -136,8 +143,8 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
         const responseItem = new ResponseItem();
         this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
-            if(dataProvider) {
-                const users = await dataProvider.list();    
+            if(this._dataProvider) {
+                const users = await this._dataProvider.list();    
                 responseItem.Status = StatusType.SUCCESS;
                 responseItem.Data = users;         
             } else {
