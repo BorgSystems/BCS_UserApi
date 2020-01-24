@@ -1,9 +1,9 @@
 import {expect} from 'chai';
 import 'mocha';
 
-import {FakeUserDataCreator} from '../../src/Data/Factory/FakeUserDataCreator';
-import { User } from '../../src/Models/Users/User';
-import UserValuesBuilder from '../../src/Data/Builders/ValuesBuilder/UserValuesBuilder';
+import {FakeUserDataCreator} from '../../../src/Data/Factory/Users/FakeUserDataCreator';
+import { User } from '../../../src/Models/Users/User';
+import UserValuesBuilder from '../../../src/Data/Builders/ValuesBuilder/UserValuesBuilder';
 describe('DataCreators functional', () => {
     it('Should return data provider', () => {
         const dataCreator = new FakeUserDataCreator();

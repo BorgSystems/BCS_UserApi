@@ -7,7 +7,7 @@ import { EventTypes } from './Data/Events/EventType';
 import { EventNames } from './Data/Events/EventName';
 
 import Config from './Config/Config';
-import { FakeUserDataCreator } from './Data/Factory/FakeUserDataCreator';
+import { FakeUserDataCreator } from './Data/Factory/Users/FakeUserDataCreator';
 
 const PORT = process.env.PORT || 6011;
 const app = express();
