@@ -19,3 +19,10 @@ export class User implements IClonable<User> {
         return new User(this._userValues.clone());
     }
 }
+
+export class InvalidUser extends User{
+    constructor() {
+        const nullVals = new UserValues();
+        super(nullVals);
+    }
+}
