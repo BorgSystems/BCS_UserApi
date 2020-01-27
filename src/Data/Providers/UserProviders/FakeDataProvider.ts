@@ -70,7 +70,7 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
     list(): Promise<Array<User>> {
         return new Promise(resolve => resolve(this.userData));
     }    
-    read(userId: Number): Promise<User> | Promise<null> {
+    read(userId: Number): Promise<User> {
         return new Promise<User>((resolve,reject) => {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);

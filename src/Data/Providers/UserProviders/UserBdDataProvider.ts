@@ -17,10 +17,13 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
         }
         return item.clone();
     }    
-    update(values: UserValues, ...keys: any): Promise<User> {
+    
+    read(...keys: any): Promise<User> {
+        const userValues = keys as UserValues;
         throw new Error("Method not implemented.");
     }
-    read(...keys: any): Promise<User> | Promise<null> {
+
+    update(values: UserValues, ...keys: any): Promise<User> {
         throw new Error("Method not implemented.");
     }
     delete(...keys: any): Promise<boolean> {

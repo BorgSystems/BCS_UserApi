@@ -5,6 +5,7 @@ import UserBdDataProvider from '../../../src/Data/Providers/UserProviders/UserBd
 import UserValuesBuilder from '../../../src/Data/Builders/ValuesBuilder/UserValuesBuilder';
 import { User } from '../../../src/Models/Users/User';
 import { fail } from 'assert';
+import UserValues from '../../../src/Models/Users/UserValues';
 
 //CRUDL tests: Create, Read, Update, Delete, List
 describe('User data provider from dataBase CRUDL', () => {
@@ -24,8 +25,15 @@ describe('User data provider from dataBase CRUDL', () => {
         expect(createdUser.getValues().phoneNumber).is.not.undefined;
     });
 
-    it.skip('Should *Read* user', async () => {
-        fail();
+    it('Should *Read* user by ID', async () => {
+        const values = new UserValues();
+        values.itemID = 0;
+        
+        const readedUser = await userProvider.read(values);
+        const readedValues = readedUser.getValues();
+        expect(readedValues).is.not.null;
+        expect(readedValues).is.not.undefined;
+        expect(readedValues.itemID).is.equal(values.itemID); 
     });
 
     it.skip('Should *Update* user', async () => {

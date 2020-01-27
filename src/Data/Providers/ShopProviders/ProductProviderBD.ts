@@ -9,7 +9,7 @@ export default class ProductProviderBD implements IDataProvider<Product, Product
     update(values: ProductValues, ...keys: any): Promise<Product> {
         throw new Error("Method not implemented.");
     }
-    read(...keys: any): Promise<Product> | Promise<null> {
+    read(...keys: any): Promise<Product>  {
         throw new Error("Method not implemented.");
     }
     delete(...keys: any): Promise<boolean> {
