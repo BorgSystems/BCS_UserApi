@@ -4,11 +4,13 @@ import UserValues from "../../../Models/Users/UserValues";
 import mySql from 'mysql';
 import { Singleton } from "../../../Development/Singletons";
 
+const usersTableName = 'users';
+
 export default class UserBdDataProvider implements IDataProvider<User, UserValues> {
     async create(item: User): Promise<User> {
         const itemValues = item.getValues();
-        const query = `INSERT INTO users (first_name, phone_number, user_role, bonuses)
-        VALUES ("${itemValues.firstName}", "${itemValues.phoneNumber}", ${itemValues.userRole}, ${itemValues.bonuses});`;
+        const query = `INSERT INTO ${usersTableName} (first_name, phone_number, user_role, bonuses)
+        VALUES ("${itemValues.first_name}", "${itemValues.phone_number}", ${itemValues.user_role}, ${itemValues.bonuses});`;
         try {
             await this.makeQueryAsync(query);
         } catch(err) {
@@ -18,9 +20,23 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
         return item.clone();
     }    
     
-    read(...keys: any): Promise<User> {
-        const userValues = keys as UserValues;
-        throw new Error("Method not implemented.");
+    async read(...keys: any): Promise<User> {
+        const userValues = keys[0] as UserValues;
+        const definedKeys = userValues.getDefinedKeys();
+
+        let names = '';
+        definedKeys.forEach(v => names += `${v}`);
+
+        let searchValues = '';
+        definedKeys.map((k, i, arr) => {
+            console.log(`Map for ${k} and ${i} !`);
+            let and = arr[i + 1] ? 'and ' : '';
+            searchValues += `${k}="${Reflect.get(userValues,k)}" ${and}`;
+        });
+
+        const query = `SELECT * FROM ${usersTableName} WHERE ${searchValues}`;   
+        const results = await this.makeQueryAsync(query);
+        return new InvalidUser(); //test
     }
 
     update(values: UserValues, ...keys: any): Promise<User> {
@@ -40,6 +56,7 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
             password : '1488',
             database : 'bc_bonuses'
           });
+        console.log(`TRY EXECUTE QUERY: \n ${query}`);
         connection.connect();
         return new Promise((resolve, reject) => {
             connection.query(query, (err, results, fields) => {

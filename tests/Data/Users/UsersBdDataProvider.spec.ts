@@ -22,18 +22,19 @@ describe('User data provider from dataBase CRUDL', () => {
         const createdUser = await userProvider.create(new User(values));
         expect(createdUser).is.not.null;
         expect(createdUser).is.not.undefined;
-        expect(createdUser.getValues().phoneNumber).is.not.undefined;
+        expect(createdUser.getValues().phone_number).is.not.undefined;
     });
 
     it('Should *Read* user by ID', async () => {
         const values = new UserValues();
-        values.itemID = 0;
+        values.id = 0;
+        values.first_name = 'vovka';
         
         const readedUser = await userProvider.read(values);
         const readedValues = readedUser.getValues();
         expect(readedValues).is.not.null;
         expect(readedValues).is.not.undefined;
-        expect(readedValues.itemID).is.equal(values.itemID); 
+        expect(readedValues.id).is.equal(values.id); 
     });
 
     it.skip('Should *Update* user', async () => {

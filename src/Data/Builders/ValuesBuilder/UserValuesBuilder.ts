@@ -7,22 +7,22 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
         this._userValues = new UserValues();
     }
     setId(id: Number): UserValuesBuilder {
-        this._userValues.itemID = id;
+        this._userValues.id = id;
         return this;
     }
     setFirstName(firstName: String): UserValuesBuilder {
         if(firstName)
-            this._userValues.firstName = firstName;
+            this._userValues.first_name = firstName;
         return this;
     }
     setPhoneNumber(phoneNumber: string): UserValuesBuilder {
         if(phoneNumber)
-            this._userValues.phoneNumber = phoneNumber;
+            this._userValues.phone_number = phoneNumber;
         return this;
     }
     setRole(userRole?: number): UserValuesBuilder {
         if(userRole)
-            this._userValues.userRole = userRole;
+            this._userValues.user_role = userRole;
         return this;
     }
     setBonuses(bonuses?: number): UserValuesBuilder {

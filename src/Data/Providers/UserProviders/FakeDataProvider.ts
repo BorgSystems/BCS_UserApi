@@ -40,7 +40,7 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
         return new Promise((resolve,reject) => {
             try {
                 this.userData.push(user);
-                user.getValues().itemID = this._currentUserIndex;
+                user.getValues().id = this._currentUserIndex;
                 this._currentUserIndex++;
                 resolve(user.clone());
             } catch(err) {
@@ -52,11 +52,11 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
         const userId = keys[0];
         return new Promise((resolve, reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().itemID === userId);
+                const target = this.userData.find(u => u.getValues().id === userId);
                 if(target) {
                     const oldValues = target.getValues();
-                    const targetId = oldValues.itemID;
-                    newUserValues.itemID = targetId;
+                    const targetId = oldValues.id;
+                    newUserValues.id = targetId;
                     target.setValues(newUserValues.clone(oldValues));
                     resolve(target.clone());
                 } else {
@@ -73,7 +73,7 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
     read(userId: Number): Promise<User> {
         return new Promise<User>((resolve,reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().itemID === userId);
+                const target = this.userData.find(u => u.getValues().id === userId);
                 if(target) {
                     resolve(target.clone());
                 } else {
@@ -88,7 +88,7 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
     delete(id: Number): Promise<boolean> {
         return new Promise<boolean>((resolve,reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().itemID === id);
+                const target = this.userData.find(u => u.getValues().id === id);
                 if(target) {
                     const index = this.userData.indexOf(target);
                     let isDeleted = false;

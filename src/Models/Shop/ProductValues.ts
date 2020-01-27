@@ -12,7 +12,7 @@ export default class ProductValues extends ValuesBase implements IClonable<Produ
         if(oldValues)
             this.saveOldValues(oldValues);
         const copy = new ProductValues();
-        copy.itemID = this.itemID;
+        copy.id = this.id;
         copy.Title = this.Title;
         copy.Description = this.Description;
         copy.Slug = this.Slug;
