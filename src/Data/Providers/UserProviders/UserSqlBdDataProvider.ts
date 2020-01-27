@@ -30,8 +30,18 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         return users; //test
     }
 
-    update(values: UserValues, ...keys: any): Promise<User> {
-        throw new Error("Method not implemented.");
+    async update(values: UserValues, ...keys: any): Promise<Array<User>> {
+        const conditionQuery = keys[0] as string;
+        let setOfChanges = '';
+        values.getDefinedKeys().forEach(k => {
+            setOfChanges += `${k}="${Reflect.get(values, k)}",`
+        });
+        const query = `UPDATE ${usersTableName} SET ${setOfChanges} WHERE ${conditionQuery}`;   
+        const results = await this.makeQueryAsync(query) as Array<any>;
+        const findedUserValues = results as Array<UserValues>;
+        const users = new Array<User>();
+        findedUserValues.forEach(v => users.push(new User(v)));
+        return users; //test
     }
     delete(...keys: any): Promise<boolean> {
         throw new Error("Method not implemented.");

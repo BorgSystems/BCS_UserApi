@@ -31,7 +31,9 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
         return this;
     }
     build(): UserValues {
-        return this._userValues.clone();
+        const copy = this._userValues.clone();
+        this._userValues.reset();
+        return copy;
     }
     
 }

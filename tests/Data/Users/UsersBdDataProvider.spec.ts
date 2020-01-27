@@ -12,6 +12,7 @@ import UserValues from '../../../src/Models/Users/UserValues';
 describe('User data provider from dataBase CRUDL', () => {
 
     const userProvider = new UserSqlBdDataProvider();
+    const conditionBuilder = new SqlQueryConditionBuilder();
     const userValuesBuilder = new UserValuesBuilder();
     it('Should *Create* user', async () => {
         const values = userValuesBuilder
@@ -43,7 +44,6 @@ describe('User data provider from dataBase CRUDL', () => {
     });
 
     it('Should *Read* sever users by name', async () => {
-        const conditionBuilder = new SqlQueryConditionBuilder();
         const conditions = conditionBuilder
             .addField('first_name','B0riz')
             .addCondition(SqlCondition.OR)
@@ -59,8 +59,16 @@ describe('User data provider from dataBase CRUDL', () => {
         expect(michaValues.first_name).is.equal('MichaelIvanco'); 
     });
 
-    it.skip('Should *Update* user', async () => {
-        fail();
+    it('Should *Update* user', async () => {
+        const userValues = userValuesBuilder
+            .setFirstName('pizdanutiy')
+            .setPhoneNumber('20-25-50')
+            .build();
+        const conditions = conditionBuilder
+            .addField('first_name', 'B0riz')
+            .build();
+        const updatedUsers = await userProvider.update(userValues, conditions);
+        expect(updatedUsers.length > 0).is.equal(true);
     });
 
     it.skip('Should *Delete* user', async () => {

@@ -10,7 +10,12 @@ export default class UserValues extends ValuesBase implements IClonable<UserValu
     phone_number?: String;
     user_role?: Number;
     bonuses?: Number;
-
+    reset() {
+        this.first_name = undefined;
+        this.phone_number = undefined;
+        this.user_role = undefined;
+        this.bonuses = undefined;
+    }
     clone(oldValues?: UserValues): UserValues  {
         if(oldValues) 
             this.saveOldValues(oldValues);

@@ -23,6 +23,8 @@ export class SqlQueryConditionBuilder {
     }
 
     build() {
-        return this._currentQuery;
+        const copy = this._currentQuery;
+        this._currentQuery = '';
+        return copy; 
     }
 }
