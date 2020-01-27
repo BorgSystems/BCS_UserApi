@@ -6,7 +6,7 @@ import { Singleton } from "../../../Development/Singletons";
 
 const usersTableName = 'users';
 
-export default class UserBdDataProvider implements IDataProvider<User, UserValues> {
+export default class UserSqlBdDataProvider implements IDataProvider<User, UserValues> {
     async create(item: User): Promise<User> {
         const itemValues = item.getValues();
         const query = `INSERT INTO ${usersTableName} (first_name, phone_number, user_role, bonuses)
@@ -20,23 +20,14 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
         return item.clone();
     }    
     
-    async read(...keys: any): Promise<User> {
-        const userValues = keys[0] as UserValues;
-        const definedKeys = userValues.getDefinedKeys();
-
-        let names = '';
-        definedKeys.forEach(v => names += `${v}`);
-
-        let searchValues = '';
-        definedKeys.map((k, i, arr) => {
-            console.log(`Map for ${k} and ${i} !`);
-            let and = arr[i + 1] ? 'and ' : '';
-            searchValues += `${k}="${Reflect.get(userValues,k)}" ${and}`;
-        });
-
-        const query = `SELECT * FROM ${usersTableName} WHERE ${searchValues}`;   
-        const results = await this.makeQueryAsync(query);
-        return new InvalidUser(); //test
+    async read(...keys: any): Promise<Array<User>> {
+        const conditionQuery = keys[0] as string;
+        const query = `SELECT * FROM ${usersTableName} WHERE ${conditionQuery}`;   
+        const results = await this.makeQueryAsync(query) as Array<any>;
+        const findedUserValues = results as Array<UserValues>;
+        const users = new Array<User>();
+        findedUserValues.forEach(v => users.push(new User(v)));
+        return users; //test
     }
 
     update(values: UserValues, ...keys: any): Promise<User> {
@@ -64,6 +55,7 @@ export default class UserBdDataProvider implements IDataProvider<User, UserValue
                     reject(err);
                 } else {
                     Singleton.getLogger().info(`Results from query! \n ${JSON.stringify(results)}`);
+                    //Singleton.getLogger().info(`Fields from query! \n ${JSON.stringify(fields)}`);
                     connection.end();
                     resolve(results);
                 }        

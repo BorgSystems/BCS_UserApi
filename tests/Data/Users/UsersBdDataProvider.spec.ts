@@ -1,16 +1,17 @@
 import 'mocha';
 import {expect} from 'chai';
 
-import UserBdDataProvider from '../../../src/Data/Providers/UserProviders/UserBdDataProvider';
+import UserSqlBdDataProvider from '../../../src/Data/Providers/UserProviders/UserSqlBdDataProvider';
 import UserValuesBuilder from '../../../src/Data/Builders/ValuesBuilder/UserValuesBuilder';
 import { User } from '../../../src/Models/Users/User';
 import { fail } from 'assert';
+import { SqlQueryConditionBuilder, SqlCondition } from '../../../src//Data/Sql/QueryContainers';
 import UserValues from '../../../src/Models/Users/UserValues';
 
 //CRUDL tests: Create, Read, Update, Delete, List
 describe('User data provider from dataBase CRUDL', () => {
 
-    const userProvider = new UserBdDataProvider();
+    const userProvider = new UserSqlBdDataProvider();
     const userValuesBuilder = new UserValuesBuilder();
     it('Should *Create* user', async () => {
         const values = userValuesBuilder
@@ -25,16 +26,37 @@ describe('User data provider from dataBase CRUDL', () => {
         expect(createdUser.getValues().phone_number).is.not.undefined;
     });
 
-    it('Should *Read* user by ID', async () => {
-        const values = new UserValues();
-        values.id = 0;
-        values.first_name = 'vovka';
+    it('Should *Read* user by name', async () => {
+        const conditionBuilder = new SqlQueryConditionBuilder();
+        const conditions = conditionBuilder
+            .addField('first_name','B0riz')
+            .addCondition(SqlCondition.AND)
+            .addField('phone_number', '1488-1488')
+            .build();
         
-        const readedUser = await userProvider.read(values);
-        const readedValues = readedUser.getValues();
+        const readedUsers = await userProvider.read(conditions);
+        const readedValues = readedUsers[0].getValues();
         expect(readedValues).is.not.null;
         expect(readedValues).is.not.undefined;
-        expect(readedValues.id).is.equal(values.id); 
+        expect(readedValues.first_name).is.equal('B0riz'); 
+        expect(readedValues.phone_number).is.equal('1488-1488'); 
+    });
+
+    it('Should *Read* sever users by name', async () => {
+        const conditionBuilder = new SqlQueryConditionBuilder();
+        const conditions = conditionBuilder
+            .addField('first_name','B0riz')
+            .addCondition(SqlCondition.OR)
+            .addField('first_name','MichaelIvanco')
+            .build();
+        
+        const readedUsers = await userProvider.read(conditions);
+        expect(readedUsers.length > 0).is.equal(true);
+        const borizValues = readedUsers[0].getValues();
+        const michaValues = readedUsers[1].getValues();
+
+        expect(borizValues.first_name).is.equal('B0riz'); 
+        expect(michaValues.first_name).is.equal('MichaelIvanco'); 
     });
 
     it.skip('Should *Update* user', async () => {
