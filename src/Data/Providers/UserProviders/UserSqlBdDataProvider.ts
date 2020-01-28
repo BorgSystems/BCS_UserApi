@@ -19,7 +19,10 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         }
         return item.clone();
     }    
-    
+    /**
+     * 
+     * @param keys first param shuld be a string from SqlQueryConditionBuilder! 
+     */
     async read(...keys: any): Promise<Array<User>> {
         const conditionQuery = keys[0] as string;
         const query = `SELECT * FROM ${usersTableName} WHERE ${conditionQuery}`;   
@@ -30,6 +33,10 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         return users;
     }
 
+    /**
+     * 
+     * @param keys first param shuld be a string from SqlQueryConditionBuilder! 
+     */
     async update(values: UserValues, ...keys: any): Promise<boolean> {
         const conditionQuery = keys[0] as string;
         let setOfChanges = '';
@@ -43,6 +50,11 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         const isAffected = affectedRows > 0;
         return isAffected;
     }
+
+    /**
+     * 
+     * @param keys first param shuld be a string from SqlQueryConditionBuilder! 
+     */
     async delete(...keys: any): Promise<boolean> {
         const conditionQuery = keys[0] as string;
         const query = `DELETE FROM ${usersTableName} WHERE ${conditionQuery}`;
