@@ -1,5 +1,6 @@
 import ValuesBase from "../ValuesBase";
 import IClonable from "../Interfaces/IClonable";
+import { UserRoles } from "./UserExportData";
 
 /**
  * Fields of userValues should be same as in the database!
@@ -8,7 +9,7 @@ export default class UserValues extends ValuesBase implements IClonable<UserValu
     //Fields names like in dataBase!
     first_name?: String;
     phone_number?: String;
-    user_role?: Number;
+    user_role?: UserRoles;
     bonuses?: Number;
     reset() {
         this.first_name = undefined;

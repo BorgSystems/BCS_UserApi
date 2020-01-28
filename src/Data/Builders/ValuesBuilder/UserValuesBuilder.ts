@@ -1,5 +1,6 @@
 import IBuilder from "../IBuilder";
 import UserValues from "../../../Models/Users/UserValues";
+import { UserRoles } from "../../../Models/Users/UserExportData";
 
 export default class UserValuesBuilder implements IBuilder<UserValues> {
     private _userValues: UserValues;
@@ -20,7 +21,7 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
             this._userValues.phone_number = phoneNumber;
         return this;
     }
-    setRole(userRole?: number): UserValuesBuilder {
+    setRole(userRole?: UserRoles): UserValuesBuilder {
         this._userValues.user_role = userRole;
         return this;
     }

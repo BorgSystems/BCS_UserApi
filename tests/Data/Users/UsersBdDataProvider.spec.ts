@@ -8,6 +8,7 @@ import { fail } from 'assert';
 import { SqlQueryConditionBuilder, SqlCondition } from '../../../src//Data/Sql/QueryContainers';
 import UserValues from '../../../src/Models/Users/UserValues';
 import { before } from 'mocha';
+import { UserRoles } from '../../../src/Models/Users/UserExportData';
 
 //THIS TESTS WORK ONLY WITH CLEARLY DATABASE!
 //CRUDL tests: Create, Read, Update, Delete, List
@@ -22,14 +23,14 @@ describe('User data provider from dataBase CRUDL', () => {
             userValuesBuilder
             .setFirstName('MichaelIvanco')
             .setPhoneNumber('1314-9999')
-            .setRole(0)
+            .setRole(UserRoles.ADMIN)
             .setBonuses(12)
             .build() ,
 
             userValuesBuilder
             .setFirstName('B0riz')
             .setPhoneNumber('1488-1488')
-            .setRole(2)
+            .setRole(UserRoles.SUPER_USER)
             .setBonuses(300)
             .build() 
         ]
@@ -42,7 +43,7 @@ describe('User data provider from dataBase CRUDL', () => {
         const values = userValuesBuilder
             .setFirstName('Vova')
             .setPhoneNumber('+7 1488 1488')
-            .setRole(3)
+            .setRole(UserRoles.SIMPLE_USER)
             .setBonuses(500)
             .build();
         const createdUser = await userProvider.create(new User(values));
