@@ -9,10 +9,11 @@ export default class AuthorizationRouter implements IRouter {
         this._router = Express.Router();
         this._router.post('/login', async (req, res) => {
             const responseItem = new ResponseItem();
-            const login = req.body?.login;
-            const password = req.body?.password;
+            const login = Reflect.get(req.body, "login");
+            const password = Reflect.get(req.body, "password"); 
 
             if(login && password) {
+                //TODO: check login here
                 const isCorrectLogin = login === 'intfloatbool@gmail.com';
                 const isCorrectPassword = password === '12345';
                 if(isCorrectLogin && isCorrectPassword) {
@@ -32,7 +33,7 @@ export default class AuthorizationRouter implements IRouter {
             }
 
             responseItem.Status = StatusType.FAILED;
-            responseItem.Data = new FailedReason(`Cannot login with values: \n login:${req.body?.login} \n password:${req.body?.password}`);
+            responseItem.Data = new FailedReason(`Cannot login with values: \n login:${login} \n password:${password}`);
             return res.json(responseItem);
         });
     }
