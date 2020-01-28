@@ -105,7 +105,8 @@ describe('User data provider from dataBase CRUDL', () => {
         expect(isDeleted).is.true;
     });
 
-    it.skip('Should *List* users', async () => {
-        fail();
+    it('Should *List* users', async () => {
+        const allUsers = await userProvider.list();
+        expect(allUsers.length > 1).is.true;
     });
 });

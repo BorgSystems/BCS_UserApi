@@ -27,7 +27,7 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         const findedUserValues = results as Array<UserValues>;
         const users = new Array<User>();
         findedUserValues.forEach(v => users.push(new User(v)));
-        return users; //test
+        return users;
     }
 
     async update(values: UserValues, ...keys: any): Promise<boolean> {
@@ -41,7 +41,7 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         const results = await this.makeQueryAsync(query) as object;
         const affectedRows = Reflect.get(results, 'affectedRows');
         const isAffected = affectedRows > 0;
-        return isAffected; //test
+        return isAffected;
     }
     async delete(...keys: any): Promise<boolean> {
         const conditionQuery = keys[0] as string;
@@ -52,8 +52,13 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
         return isAffected;
 
     }
-    list(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+    async list(): Promise<Array<User>> {
+        const query = `SELECT * FROM ${usersTableName}`;   
+        const results = await this.makeQueryAsync(query) as Array<any>;
+        const findedUserValues = results as Array<UserValues>;
+        const users = new Array<User>();
+        findedUserValues.forEach(v => users.push(new User(v)));
+        return users;
     }
 
     makeQueryAsync(query: string) {
