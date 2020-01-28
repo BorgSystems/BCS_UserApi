@@ -38,13 +38,19 @@ export default class UserSqlBdDataProvider implements IDataProvider<User, UserVa
             setOfChanges += `${k}="${Reflect.get(values, k)}"${nextSymbol}`
         });
         const query = `UPDATE ${usersTableName} SET ${setOfChanges} WHERE ${conditionQuery}`;   
-        const results = await this.makeQueryAsync(query) as Array<any>;
+        const results = await this.makeQueryAsync(query) as object;
         const affectedRows = Reflect.get(results, 'affectedRows');
         const isAffected = affectedRows > 0;
         return isAffected; //test
     }
-    delete(...keys: any): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async delete(...keys: any): Promise<boolean> {
+        const conditionQuery = keys[0] as string;
+        const query = `DELETE FROM ${usersTableName} WHERE ${conditionQuery}`;
+        const results = await this.makeQueryAsync(query) as object;
+        const affectedRows = Reflect.get(results, 'affectedRows');
+        const isAffected = affectedRows > 0;
+        return isAffected;
+
     }
     list(): Promise<User[]> {
         throw new Error("Method not implemented.");

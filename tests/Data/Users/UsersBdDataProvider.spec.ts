@@ -97,9 +97,13 @@ describe('User data provider from dataBase CRUDL', () => {
         expect(isUpdated).is.equal(true);
     });
 
-    it.skip('Should *Delete* user', async () => {
-        fail();
-    }).skip;
+    it('Should *Delete* user', async () => {
+        const conditions = conditionBuilder
+            .addField('first_name', 'pizdanutiy')
+            .build();
+        const isDeleted = await userProvider.delete(conditions);
+        expect(isDeleted).is.true;
+    });
 
     it.skip('Should *List* users', async () => {
         fail();
