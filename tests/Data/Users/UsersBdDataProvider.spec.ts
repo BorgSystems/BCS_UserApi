@@ -7,13 +7,37 @@ import { User } from '../../../src/Models/Users/User';
 import { fail } from 'assert';
 import { SqlQueryConditionBuilder, SqlCondition } from '../../../src//Data/Sql/QueryContainers';
 import UserValues from '../../../src/Models/Users/UserValues';
+import { before } from 'mocha';
 
+//THIS TESTS WORK ONLY WITH CLEARLY DATABASE!
 //CRUDL tests: Create, Read, Update, Delete, List
 describe('User data provider from dataBase CRUDL', () => {
 
     const userProvider = new UserSqlBdDataProvider();
     const conditionBuilder = new SqlQueryConditionBuilder();
     const userValuesBuilder = new UserValuesBuilder();
+    before(async () => {
+        //fill database
+        const values: Array<UserValues> = [
+            userValuesBuilder
+            .setFirstName('MichaelIvanco')
+            .setPhoneNumber('1314-9999')
+            .setRole(0)
+            .setBonuses(12)
+            .build() ,
+
+            userValuesBuilder
+            .setFirstName('B0riz')
+            .setPhoneNumber('1488-1488')
+            .setRole(2)
+            .setBonuses(300)
+            .build() 
+        ]
+        for(const val of values) {
+            await userProvider.create(new User(val));
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }); 
     it('Should *Create* user', async () => {
         const values = userValuesBuilder
             .setFirstName('Vova')
@@ -52,11 +76,13 @@ describe('User data provider from dataBase CRUDL', () => {
         
         const readedUsers = await userProvider.read(conditions);
         expect(readedUsers.length > 0).is.equal(true);
-        const borizValues = readedUsers[0].getValues();
-        const michaValues = readedUsers[1].getValues();
+        const boriz = readedUsers.find(u => u.getValues().first_name === 'B0riz');
+        const micha = readedUsers.find(u => u.getValues().first_name === 'MichaelIvanco');
 
-        expect(borizValues.first_name).is.equal('B0riz'); 
-        expect(michaValues.first_name).is.equal('MichaelIvanco'); 
+        expect(boriz).is.not.null; 
+        expect(boriz).is.not.undefined; 
+        expect(micha).is.not.null; 
+        expect(micha).is.not.undefined; 
     });
 
     it('Should *Update* user', async () => {
@@ -67,8 +93,8 @@ describe('User data provider from dataBase CRUDL', () => {
         const conditions = conditionBuilder
             .addField('first_name', 'B0riz')
             .build();
-        const updatedUsers = await userProvider.update(userValues, conditions);
-        expect(updatedUsers.length > 0).is.equal(true);
+        const isUpdated = await userProvider.update(userValues, conditions);
+        expect(isUpdated).is.equal(true);
     });
 
     it.skip('Should *Delete* user', async () => {

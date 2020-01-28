@@ -21,8 +21,7 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
         return this;
     }
     setRole(userRole?: number): UserValuesBuilder {
-        if(userRole)
-            this._userValues.user_role = userRole;
+        this._userValues.user_role = userRole;
         return this;
     }
     setBonuses(bonuses?: number): UserValuesBuilder {
